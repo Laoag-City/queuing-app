@@ -1,0 +1,55 @@
+INSTALLATION ON SERVER
+
+Pre-requisites of the following steps:
+XAMPP
+Notepad or the text editor of your choice
+
+1. save queuing-app project folder to c:/xampp/htdocs
+
+2. go to c:/xampp/apache/conf/extra/httpd-vhosts.conf and create a virtual host block for the application. Enter this code in the last part of the file:
+<VirtualHost *:80>
+    DocumentRoot "C:/xampp/htdocs/queuing-app/public"
+    ServerName queuing-app.local
+</VirtualHost>
+
+3. go to c:/windows/system32/drivers/etc/hosts and add an entry of the localhost IP address and the hostname queuing-app.local so that the application is accessible when you access it in your browser. Enter this code:
+127.0.0.1	queuing-app.local
+
+4. go to localhost/phpmyadmin in the browser and create a new database. Database name is queuing_db, collation is utf8_unicode_ci
+
+5. go inside queuing_db database, click import, click choose file and upload the queuing_db.sql file that is inside the queuing-app project folder. Then click Go.
+
+6. Restart Apache and MySql services at Services app in Windows
+
+7. Now access queuing-app.local in your browser. Admin username is admin and password is simulations.
+
+---------------------------------------------------------------
+
+INSTALLATION ON CLIENT
+
+1. go to c:/windows/system32/drivers/etc/hosts and add an entry of the server's IP address and the hostname queuing-app.local so that the application is accessible when you access it in your browser. Enter this code:
+192.168.0.6	queuing-app.local
+
+---------------------------------------------------------------
+
+NOTES WHEN UPDATING SOURCE CODE
+
+Pre-requisites of the following steps:
+XAMPP
+Notepad or the text editor of your choice
+PHP Composer - for the application's third party PHP package dependencies
+Node.js - for the application's third party JavaScript package dependencies and front-end compiler (Laravel Mix)
+Knowledge in PHP, Laravel, HTML, CSS, JavaScript, Semantic UI, Vue
+
+
+When updating/editing the source code, do it in a development computer and not on the server because the environment in a server differs widely from that of a development computer.
+The application's settings are optimized for production use, not development use. To start updating the source code, do the steps in "INSTALLATION ON SERVER" on a development computer.
+After following the steps, go to cmd and run the following commands:
+
+cd c:/xampp/htdocs/queuing-app
+
+php artisan optimize:clear
+
+Then open .env file inside project folder, change APP_ENV=production to APP_ENV=local and APP_DEBUG=false to APP_DEBUG=true.
+Now the application is now in development mode.
+Take note that when editing the code, you must have knowledge in PHP, Laravel, HTML, CSS, JavaScript, Semantic UI, Vue.
