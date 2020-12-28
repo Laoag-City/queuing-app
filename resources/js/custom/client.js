@@ -21,8 +21,7 @@ Vue.component('window-info', {
 		},
 
 		colors: {
-			type: Object,
-			required: true
+			type: Object
 		}
 	},
 

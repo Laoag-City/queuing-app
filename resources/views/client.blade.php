@@ -122,10 +122,10 @@
 	</window-info>
 </div>
 
-<h1 class="ui center aligned header {{ $queue_id == 1 ? 'orange' : 'red'  }}" style="margin-bottom: 0;">
+<h1 class="ui center aligned header {{ $pod_color  }}" style="margin-bottom: 0;">
 	{{ title_case($pod_color) }} Card for PWD / Senior Citizen
 </h1>
-<h1 class="ui center aligned header {{ $queue_id == 1 ? 'blue' : 'green' }}" style="margin-top: 0;">
+<h1 class="ui center aligned header {{ $regular_color }}" style="margin-top: 0;">
 	{{ title_case($regular_color) }} Card for Regular Clients
 </h1>
 @endsection

@@ -105,7 +105,14 @@ class UserController extends Controller
 
     		$validator->validate();
 
-    		$user->queue_type_id = $this->request->queue_type;
+            if($user->queue_type_id != $this->request->queue_type)
+            {
+                $user->queue_type_id = $this->request->queue_type;
+                $user->current_regular_queue_number = null;
+                $user->current_pod_queue_number = null;
+                $user->is_currently_serving_regular = null;
+            }
+
     		$user->username = $this->request->username;
     		$user->password = $this->request->password != null ? bcrypt($this->request->password) : $user->password;
     		$user->window_number = $this->request->window_number;

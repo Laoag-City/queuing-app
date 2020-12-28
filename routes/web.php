@@ -24,6 +24,9 @@ Route::middleware(['auth'])->group(function(){
 
 	Route::match(['get', 'put'], 'reset', 'QueuingController@resetQueue')->middleware('redirect_if_not_admin');
 
+	Route::get('queue_types', 'QueuingController@queueTypes')->middleware('redirect_if_not_admin');
+	Route::put('queue_types/{queue_type}', 'QueuingController@updateQueueType')->middleware('redirect_if_not_admin');
+
 	Route::match(['get', 'post'], 'users', 'UserController@index')->middleware('redirect_if_not_admin');
 	Route::match(['get', 'put'], 'users/{user}', 'UserController@editUser')->middleware('redirect_if_not_admin');
 	Route::delete('users/{user}', 'UserController@removeUser')->middleware('redirect_if_not_admin');

@@ -33,6 +33,11 @@
                         Reset Queue
                     </a>
 
+                    <a class="item" href="{{ url('queue_types') }}">
+                        <i class="list ol icon"></i>
+                        Queue Types
+                    </a>
+
                     <a class="item" href="{{ url('users') }}">
                         <i class="users icon"></i>
                         Users

@@ -20,8 +20,8 @@ Vue.component('window-info', {
 			default: null
 		},
 
-		alterColor: {
-			//type: String
+		colors: {
+			type: Object
 		}
 	},
 
@@ -29,27 +29,7 @@ Vue.component('window-info', {
 
 	computed: {
 		currentQueue: function currentQueue() {
-			if (this.servingRegular == 1) {
-				if (this.alterColor == 1) {
-					var color = 'blue';
-				} else if (this.alterColor == 2) {
-					var color = 'red';
-				} else if (this.alterColor == 3) {
-					var color = 'green';
-				}
-
-				return [this.currentRegular, color];
-			} else if (this.servingRegular == 0) {
-				if (this.alterColor == 1) {
-					var color = 'orange';
-				} else if (this.alterColor == 2) {
-					var color = 'green';
-				} else if (this.alterColor == 3) {
-					var color = 'red';
-				}
-
-				return [this.currentPod, color];
-			} else return [null, ''];
+			if (this.servingRegular == 1) return [this.currentRegular, this.colors.regular];else if (this.servingRegular == 0) return [this.currentPod, this.colors.pod];else return [null, ''];
 		}
 	},
 

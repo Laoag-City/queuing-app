@@ -28,14 +28,17 @@ Notepad or the text editor of your choice
 INSTALLATION ON CLIENT
 
 1. go to c:/windows/system32/drivers/etc/hosts and add an entry of the server's IP address and the hostname queuing-app.local so that the application is accessible when you access it in your browser. Enter this code:
+
 192.168.0.6	queuing-app.local
+
+where 192.168.0.6 is the ip address of the server. Feel free to use any ip address you want in your server.
 
 ---------------------------------------------------------------
 
 NOTES WHEN UPDATING SOURCE CODE
 
 Pre-requisites of the following steps:
-XAMPP
+XAMPP (XAMPP installers with PHP 7 only)
 Notepad or the text editor of your choice
 PHP Composer - for the application's third party PHP package dependencies
 Node.js - for the application's third party JavaScript package dependencies and front-end compiler (Laravel Mix)

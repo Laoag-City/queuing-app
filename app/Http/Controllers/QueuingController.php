@@ -32,7 +32,6 @@ class QueuingController extends Controller
     		'title' => 'Window ' . Auth::user()->window_number,
     		'current_regular_number' => $this->getResettedNumber(Auth::user()->current_regular_queue_number, Auth::user()->queue_type->queue_limit_regular),
     		'current_pod_number' => $this->getResettedNumber(Auth::user()->current_pod_queue_number, Auth::user()->queue_type->queue_limit_pod),
-            'queue_id' => Auth::user()->queue_type->queue_type_id,
             'regular_color' => Auth::user()->queue_type->color_regular,
             'pod_color' => Auth::user()->queue_type->color_pod,
     	]);
@@ -43,11 +42,12 @@ class QueuingController extends Controller
     {
     	if($this->request->ajax())
     	{
-    		$results = User::select(['user_id', 'window_number', 'current_regular_queue_number', 'current_pod_queue_number', 'is_currently_serving_regular'])
+    		$results = User::select(['user_id','queue_type_id', 'window_number', 'current_regular_queue_number', 'current_pod_queue_number', 'is_currently_serving_regular'])
     						->where([
     							['is_admin', '=', false],
     							['queue_type_id', '=', $queue_type->queue_type_id]
     						])
+                            ->with(['queue_type:queue_type_id,queue_limit_regular,queue_limit_pod'])
     						->orderBy('window_number', 'asc')
     						->get()
                             ->toArray();
@@ -94,6 +94,7 @@ class QueuingController extends Controller
     			$row = 'current_regular_queue_number';
                 $stats->total_regular += 1;
                 $limit = Auth::user()->queue_type->queue_limit_regular;
+                $serving_regular = true;
     		}
 
     		else
@@ -101,6 +102,7 @@ class QueuingController extends Controller
     			$row = 'current_pod_queue_number';
                 $stats->total_pod += 1;
                 $limit = Auth::user()->queue_type->queue_limit_pod;
+                $serving_regular = false;
     		}
 
             $stats->save();
@@ -183,6 +185,36 @@ class QueuingController extends Controller
 
     	else
     		return response([], 405);
+    }
+
+    public function queueTypes()
+    {
+        return view('queue_types', [
+            'title' => 'Queue Types',
+            'queues' => QueueType::all()
+        ]);
+    }
+
+    public function updateQueueType(QueueType $queue_type)
+    {
+        $colors_rule = 'in:red,orange,yellow,olive,green,teal,blue,violet,purple,pink,brown,grey,black';
+
+        Validator::make($this->request->all(), [
+                'type' => "bail|required|string|unique:queue_types,type,{$queue_type->queue_type_id},queue_type_id",
+                'regular_color' => "bail|required|different:pod_color|$colors_rule",
+                'pod_color' => "bail|required|different:regular_color|$colors_rule",
+                'regular_queue_limit' => 'bail|required|integer|min:1|max:1000',
+                'pod_queue_limit' => 'bail|required|integer|min:1|max:1000'
+            ])->validate();
+
+            $queue_type->type = $this->request->type;
+            $queue_type->color_regular = $this->request->regular_color;
+            $queue_type->color_pod = $this->request->pod_color;
+            $queue_type->queue_limit_regular = $this->request->regular_queue_limit;
+            $queue_type->queue_limit_pod = $this->request->pod_queue_limit;
+            $queue_type->save();
+
+            return back()->with('success', ['header' => 'Queue type updated successfully.']);
     }
 
     private function getResettedNumber($number, $limit)
