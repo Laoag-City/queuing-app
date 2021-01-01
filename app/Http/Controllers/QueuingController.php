@@ -191,27 +191,36 @@ class QueuingController extends Controller
     {
         return view('queue_types', [
             'title' => 'Queue Types',
-            'queues' => QueueType::all()
+            'queues' => QueueType::all(),
+            'colors' => ['red','orange','yellow','olive','green','teal','blue','violet','purple','pink','brown','grey']
         ]);
     }
 
     public function updateQueueType(QueueType $queue_type)
     {
-        $colors_rule = 'in:red,orange,yellow,olive,green,teal,blue,violet,purple,pink,brown,grey,black';
+        $colors_rule = 'in:red,orange,yellow,olive,green,teal,blue,violet,purple,pink,brown,grey';
 
-        Validator::make($this->request->all(), [
-                'type' => "bail|required|string|unique:queue_types,type,{$queue_type->queue_type_id},queue_type_id",
-                'regular_color' => "bail|required|different:pod_color|$colors_rule",
-                'pod_color' => "bail|required|different:regular_color|$colors_rule",
-                'regular_queue_limit' => 'bail|required|integer|min:1|max:1000',
-                'pod_queue_limit' => 'bail|required|integer|min:1|max:1000'
-            ])->validate();
+        $validator = Validator::make($this->request->all(), [
+                'form_number' => 'bail|required|integer|min:1',
+                'type.*' => "bail|required|string|unique:queue_types,type,{$queue_type->queue_type_id},queue_type_id",
+                'regular_color.*' => "bail|required|different:pod_senior_color.*|$colors_rule",
+                'pod_senior_color.*' => "bail|required|different:regular_color.*|$colors_rule",
+                'regular_queue_limit.*' => 'bail|required|integer|min:1|max:1000',
+                'pod_senior_queue_limit.*' => 'bail|required|integer|min:1|max:1000'
+            ]);
 
-            $queue_type->type = $this->request->type;
-            $queue_type->color_regular = $this->request->regular_color;
-            $queue_type->color_pod = $this->request->pod_color;
-            $queue_type->queue_limit_regular = $this->request->regular_queue_limit;
-            $queue_type->queue_limit_pod = $this->request->pod_queue_limit;
+            if($validator->fails())
+                return redirect('queue_types')
+                        ->withErrors($validator, $queue_type->type)
+                        ->withInput();
+
+            $values = $this->request->input($this->request->form_number);
+
+            $queue_type->type = $this->request->type[$this->request->form_number];
+            $queue_type->color_regular = $this->request->regular_color[$this->request->form_number];
+            $queue_type->color_pod = $this->request->pod_senior_color[$this->request->form_number];
+            $queue_type->queue_limit_regular = $this->request->regular_queue_limit[$this->request->form_number];
+            $queue_type->queue_limit_pod = $this->request->pod_senior_queue_limit[$this->request->form_number];
             $queue_type->save();
 
             return back()->with('success', ['header' => 'Queue type updated successfully.']);
