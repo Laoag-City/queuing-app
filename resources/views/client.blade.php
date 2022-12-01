@@ -39,6 +39,8 @@
 
 		.now_serving_number{
 			font-size: 78pt !important;
+			color: lightgray !important;
+			text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000;
 		}
 
 		.top_padded{
