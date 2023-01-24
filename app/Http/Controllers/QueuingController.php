@@ -192,7 +192,7 @@ class QueuingController extends Controller
         return view('queue_types', [
             'title' => 'Queue Types',
             'queues' => QueueType::all(),
-            'colors' => ['red','orange','yellow','olive','green','teal','blue','violet','purple','pink','brown','grey']
+            'colors' => ['red','orange','yellow','olive','green','teal','blue','violet','purple','pink','brown','grey', 'black']
         ]);
     }
 
